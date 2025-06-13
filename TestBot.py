@@ -1,13 +1,12 @@
 """
-TestBot.py
-Author: Noah Putna
-
 Description: A flexible bot that supports both Proactive and Reactive trading logic based on private/public market conditions.
 This file uses a configurable profit margin and role behaviour system for trading in Flexemarkets simulations.
 
 Note:
 - Replace FM_EMAIL and FM_PASSWORD with secure environment variables in production use.
 - BotType: 0 = Proactive, 1 = Reactive.
+
+Author: Noah Putna
 """
 
 # -- Import Statments -- 
