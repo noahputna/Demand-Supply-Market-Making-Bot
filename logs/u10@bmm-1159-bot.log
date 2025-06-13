@@ -1,6 +1,0 @@
-
-=============================== Log Started [2022-08-28 19:06:37 AEST] ===============================
-[2022-08-28 19:06:37,702:             agent.u10@bmm]:     INFO - Using FM Client version: 4.0.7-alpha
-[2022-08-28 19:06:37,704:             agent.u10@bmm]:     INFO - Attempting to log into AHM as regular-idol|u10@bmm
-[2022-08-28 19:06:38,883:             agent.u10@bmm]:    ERROR - Authentication failed for regular-idol|u10@bmm on AHM
-[2022-08-28 19:06:38,890:             agent.u10@bmm]:  WARNING - Initialisation failed. Exiting!
