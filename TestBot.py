@@ -10,6 +10,7 @@ Author: Noah Putna
 """
 
 # -- Import Statments -- 
+
 import copy
 import sys
 from enum import Enum
@@ -41,8 +42,18 @@ class DSBot(Agent):
     Uses agent signals from private market to trade in public market with profit margin buffer.
     """
 
-    # Initialises all required variables and bot settings.
     def __init__(self, account, email, password, marketplace_id, _role, _bot_type):
+        """
+        Initialise the bot with user credentials, marketplace info, and behaviour mode.
+
+        Arguments:
+            - account (str): Account name
+            - email (str): Login email.
+            - password (str): Account password.
+            - marketplace_id (int): Target marketplace ID.
+            - _role (int): Trading role (BUYER/SELLER).
+            - _bot_type: Strategy mode (0 = Proactive, 1 = Reactive).
+        """
 
         # Initalise bot and trading strategy.
         super().__init__(account, email, password, marketplace_id, name="DSBot")
@@ -90,8 +101,10 @@ class DSBot(Agent):
             self.inform(f"Market with id {market_id}")
 
             if market.private_market:
+                # Save reference to the private market (agent-originated orders).
                 self._private_market = market
             else:
+                # Save reference to the public market (bot-to-bot speculative trades).
                 self._public_market = market
 
     def order_accepted(self, order: Order):

@@ -1,32 +1,66 @@
 """
-This is a template for Project 1, Task 1 (Induced demand-supply)
+DSBot: Induced Demand-Supply Bot for Trading Simulation.
+
+Description: Defines a trading agent that operates in sumulated marketplace using either a proactive
+or reactive strategy to fulfil private agent orders while profiting from public market trades.
+
+Proactive Bot: Posts speculative orders in the public market and fulfills agent orders post-trade.
+Reactive Bot: Actively monitors public market for profitable trades that fulfil agent orders directly.
+
+Author: Noah Putna
 """
 
-# T010.
+# -- Import Statments -- 
+
 import copy
 from fmclient import Agent, Holding, OrderSide, Order, OrderType, Session
 from typing import List
 
-# Student details
-SUBMISSION = {"number": "1082614", "name": "Noah Putna"}
 
-# ------ Add a variable called PROFIT_MARGIN -----
+# Global variable to define the minimum profit threshold in cents per trade.
 global PROFIT_MARGIN
 
 
+# -- DSBot Class Definition --
+
 class DSBot(Agent):
-    # ------ Add an extra argument bot_type to the constructor -----
+    """
+    DSBot: Dynamic Strategy Bot
+    Implements both proactive and reactive behaviours for trading in Flexemarkets.
+    Uses agent signals from private market to trade in public market with profit margin buffer.
+    Inherits from fmclient.Agent.
+    """
+
     def __init__(self, account, email, password, marketplace_id, _role, _bot_type):
+        """
+        Initialise the bot with user credentials, marketplace info, and behaviour mode.
+
+        Arguments:
+            - account (str): Account name
+            - email (str): Login email.
+            - password (str): Account password.
+            - marketplace_id (int): Target marketplace ID.
+            - _role (int): Trading role (BUYER/SELLER).
+            - _bot_type: Strategy mode (0 = Proactive, 1 = Reactive).
+        """
+
+        # Initalise bot and trading strategy.
         super().__init__(account, email, password, marketplace_id, name="DSBot")
 
-        # Set all base variable conditions when bot has been initialised.
+        # Market links.
         self._public_market = None
         self._private_market = None
+
+        # Role and strategy.
         self._role = None
+        self._bot_type = None
+
+        # Trading state trackers.
         self.waiting_for_server = False
         self.traded = False
-        self._bot_type = None
         self._order_sent = False
+
+         # Order tracking.
         self._my_public_orders = []
         self._current_agent_order = []
         self._number_of_public_orders = 0
@@ -37,33 +71,47 @@ class DSBot(Agent):
         self._order_side_current = None
 
     def initialised(self):
+        """
+        Assigns public/private market references after connection.
+        """
+
         # Identifies the markets the bot has connected with.
         for market_id, market in self.markets.items():
             self.inform(f"Market with id {market_id}")
             if market.private_market:
+                # Save reference to the private market (agent-originated orders).
                 self._private_market = market
             else:
+                # Save reference to the public market (bot-to-bot speculative trades).
                 self._public_market = market
 
     def order_accepted(self, order: Order):
-        # Order acceptance conditions of proactive bot.
+        """
+        Handles bot response when an order has been accepted by the market.
+        """
+
+        # If the accepted order is not a cancel request, reset public order tracking.
         if order.ref != "Cancel_order":
             self.waiting_for_server = False
             self._number_of_public_orders = 0
             self._my_public_orders.clear()
+        
+        # Proactive bot logic - executes when NOT fulfilling agent's private order.
         elif self._bot_type == 0 and order.ref != "re_order":
             self.waiting_for_server = False
             self._order_sent = True
             self._agent_processed -= 1
             self._number_of_public_orders += 1
             self._my_public_orders.append(order.fm_id)
+        
+        # Proactive bot logic - executes when fulfilling agent's private order.
         elif self._bot_type == 0:
             self.waiting_for_server = False
             self._order_sent = False
             self._my_public_orders = 0
             self._my_public_orders.clear()
 
-        # Order acceptance conditions of reactive bot.
+        # Reactive bot logic - update state depending on whether fulfilling agent's private order or not.
         if self._bot_type == 1 and order.ref != "re_order":
             self.traded = False
             self.waiting_for_server = False
@@ -74,10 +122,15 @@ class DSBot(Agent):
             self.waiting_for_server = False
             self._order_sent = False
 
-        # Inform observer that order has been accepted.
+        # Log order acceptance with its reference tag.
         self.inform(f"Order accepted {order.ref}")
 
     def order_rejected(self, info, order: Order):
+        """
+        Handles logic when an order is rejected by the market.
+        Resets internal bot state depending on bot type
+        """
+
         # Order rejected conditions of proactive bot.
         if self._bot_type == 0:
             self.waiting_for_server = False
@@ -91,6 +144,9 @@ class DSBot(Agent):
         self.inform(f"Order rejected {order.ref}")
 
     def received_orders(self, orders: List[Order]):
+        """
+        Core logic to process orders in either proactive or reactive mode based on market data.
+        """
 
         # Proactive bot initialisation.
         if self._bot_type == 0:
@@ -296,15 +352,27 @@ class DSBot(Agent):
                 self.error(f"{e}")
 
     def _print_trade_opportunity(self, role, order):
+        """
+        Logs a detected profitable trading opportunity.
+        """
+
         # Inform of possible trade opportunity.
         self.inform(f"I am a {role} with profitable order {order}")
 
     def received_holdings(self, holdings: Holding):
+        """
+        Displays cash available and settled holdings for transparency.
+        """
+
         # Inform of current cash holdings.
         self.inform(f"Cash available is {holdings.cash_available}")
         self.inform(f"Cash settled is {holdings.cash}")
 
     def received_session_info(self, session: Session):
+        """
+        Handles logic on market open and close, resetting states as needed.
+        """
+
         # Inform market session information.
         if session.is_open:
             self.inform("Market is open")
@@ -315,6 +383,10 @@ class DSBot(Agent):
             self.inform("Market is closed")
     
     def pre_start_tasks(self):
+        """
+        Prompts user for bot type and profit margin before starting the session.
+        """
+
         # Prompt user will enter a bot type.
         self._bot_type = int(input("Enter a Bot Type: \n"
                                    "PROACTIVE = 0 \n"
@@ -327,12 +399,20 @@ class DSBot(Agent):
 
 # Launch the bot using personalised trading account.
 if __name__ == "__main__":
+    """
+    Main entry point of the program.
+    Instantiates and runs the trading bot with user-defined credentials and settings.
+
+    SECURITY INFORMATION:
+    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables
+    """
+
     FM_ACCOUNT = "regular-idol"
-    FM_EMAIL = "nputna@student.unimelb.edu.au"
-    FM_PASSWORD = "1082614"
+    FM_EMAIL = "FM_EMAIL"       # Replace with environment variable in real use.
+    FM_PASSWORD = "FM_PASSWORD" # Replace with environment variable in real use.
     MARKETPLACE_ID = 1174
-    ROLE = 0
-    BOT_TYPE = 0
+    ROLE = 0                    # Role: 0 = BUYER, 1 = SELLER
+    BOT_TYPE = 0                # Bot Type: 0 = PROACTIVE, 1 = REACTIVE
 
     ds_bot = DSBot(FM_ACCOUNT, FM_EMAIL, FM_PASSWORD, MARKETPLACE_ID, ROLE, BOT_TYPE)
     ds_bot.run()
