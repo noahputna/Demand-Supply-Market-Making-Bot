@@ -6,6 +6,8 @@ order placement and session handling using the Flexemarkets API client.
 Author: Noah Putna
 """
 
+# -- Import Statments --
+
 from typing import List
 from fmclient import Agent, Session, Holding, Order, OrderSide, OrderType
 
@@ -88,6 +90,11 @@ class ProactiveBot(Agent):
 
 
 if __name__ == "__main__":
+    """
+    SECURITY INFORMATION:
+    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables
+    """
+
     FM_EMAIL = "FM_EMAIL" # Replace with environment variable in real use.
     FM_PASSWORD = "FM_PASSWORD" # Replace with environment variable in real use.
 
