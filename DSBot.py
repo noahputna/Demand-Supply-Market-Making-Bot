@@ -32,8 +32,7 @@ class DSBot(Agent):
     """
 
     def __init__(self, account, email, password, marketplace_id, _role, _bot_type):
-        """
-        Initialise the bot with user credentials, marketplace info, and behaviour mode.
+        """ Initialise the bot with user credentials, marketplace info, and behaviour mode.
 
         Arguments:
             - account (str): Account name
@@ -41,8 +40,7 @@ class DSBot(Agent):
             - password (str): Account password.
             - marketplace_id (int): Target marketplace ID.
             - _role (int): Trading role (BUYER/SELLER).
-            - _bot_type: Strategy mode (0 = Proactive, 1 = Reactive).
-        """
+            - _bot_type: Strategy mode (0 = Proactive, 1 = Reactive). """
 
         # Initalise bot and trading strategy.
         super().__init__(account, email, password, marketplace_id, name="DSBot")
@@ -71,9 +69,7 @@ class DSBot(Agent):
         self._order_side_current = None
 
     def initialised(self):
-        """
-        Assigns public/private market references after connection.
-        """
+        """ Assigns public/private market references after connection. """
 
         # Identifies the markets the bot has connected with.
         for market_id, market in self.markets.items():
@@ -86,9 +82,7 @@ class DSBot(Agent):
                 self._public_market = market
 
     def order_accepted(self, order: Order):
-        """
-        Handles bot response when an order has been accepted by the market.
-        """
+        """ Handles bot response when an order has been accepted by the market. """
 
         # If the accepted order is not a cancel request, reset public order tracking.
         if order.ref != "Cancel_order":
@@ -126,10 +120,8 @@ class DSBot(Agent):
         self.inform(f"Order accepted {order.ref}")
 
     def order_rejected(self, info, order: Order):
-        """
-        Handles logic when an order is rejected by the market.
-        Resets internal bot state depending on bot type
-        """
+        """ Handles logic when an order is rejected by the market.
+        Resets internal bot state depending on bot type. """
 
         # Order rejected conditions of proactive bot.
         if self._bot_type == 0:
@@ -144,9 +136,7 @@ class DSBot(Agent):
         self.inform(f"Order rejected {order.ref}")
 
     def received_orders(self, orders: List[Order]):
-        """
-        Core logic to process orders in either proactive or reactive mode based on market data.
-        """
+        """ Core logic to process orders in either proactive or reactive mode based on market data. """
 
         # Proactive bot initialisation.
         if self._bot_type == 0:
@@ -352,26 +342,20 @@ class DSBot(Agent):
                 self.error(f"{e}")
 
     def _print_trade_opportunity(self, role, order):
-        """
-        Logs a detected profitable trading opportunity.
-        """
+        """ Logs a detected profitable trading opportunity. """
 
         # Inform of possible trade opportunity.
         self.inform(f"I am a {role} with profitable order {order}")
 
     def received_holdings(self, holdings: Holding):
-        """
-        Displays cash available and settled holdings for transparency.
-        """
+        """ Displays cash available and settled holdings for transparency. """
 
         # Inform of current cash holdings.
         self.inform(f"Cash available is {holdings.cash_available}")
         self.inform(f"Cash settled is {holdings.cash}")
 
     def received_session_info(self, session: Session):
-        """
-        Handles logic on market open and close, resetting states as needed.
-        """
+        """ Handles logic on market open and close, resetting states as needed. """
 
         # Inform market session information.
         if session.is_open:
@@ -383,9 +367,7 @@ class DSBot(Agent):
             self.inform("Market is closed")
     
     def pre_start_tasks(self):
-        """
-        Prompts user for bot type and profit margin before starting the session.
-        """
+        """ Prompts user for bot type and profit margin before starting the session. """
 
         # Prompt user will enter a bot type.
         self._bot_type = int(input("Enter a Bot Type: \n"
@@ -399,13 +381,11 @@ class DSBot(Agent):
 
 # Launch the bot using personalised trading account.
 if __name__ == "__main__":
-    """
-    Main entry point of the program.
+    """ Main entry point of the program.
     Instantiates and runs the trading bot with user-defined credentials and settings.
 
     SECURITY INFORMATION:
-    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables
-    """
+    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables. """
 
     FM_ACCOUNT = "regular-idol"
     FM_EMAIL = "FM_EMAIL"       # Replace with environment variable in real use.

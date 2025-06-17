@@ -36,15 +36,12 @@ class BotType(Enum):
 # -- DSBot Class Definition --
 
 class DSBot(Agent):
-    """
-    DSBot: Dynamic Strategy Bot
+    """ DSBot: Dynamic Strategy Bot
     Implements both proactive and reactive behaviours for trading in Flexemarkets.
-    Uses agent signals from private market to trade in public market with profit margin buffer.
-    """
+    Uses agent signals from private market to trade in public market with profit margin buffer. """
 
     def __init__(self, account, email, password, marketplace_id, _role, _bot_type):
-        """
-        Initialise the bot with user credentials, marketplace info, and behaviour mode.
+        """ Initialise the bot with user credentials, marketplace info, and behaviour mode.
 
         Arguments:
             - account (str): Account name
@@ -52,8 +49,7 @@ class DSBot(Agent):
             - password (str): Account password.
             - marketplace_id (int): Target marketplace ID.
             - _role (int): Trading role (BUYER/SELLER).
-            - _bot_type: Strategy mode (0 = Proactive, 1 = Reactive).
-        """
+            - _bot_type: Strategy mode (0 = Proactive, 1 = Reactive). """
 
         # Initalise bot and trading strategy.
         super().__init__(account, email, password, marketplace_id, name="DSBot")
@@ -87,15 +83,11 @@ class DSBot(Agent):
         self._order_side_current = None
 
     def role(self):
-        """
-        Returns the current trading role (BUYER or SELLER).
-        """
+        """ Returns the current trading role (BUYER or SELLER). """
         return self._role
 
     def initialised(self):
-        """
-        Assigns public/private market references after connection.
-        """
+        """ Assigns public/private market references after connection. """
 
         for market_id, market in self.markets.items():
             self.inform(f"Market with id {market_id}")
@@ -108,9 +100,7 @@ class DSBot(Agent):
                 self._public_market = market
 
     def order_accepted(self, order: Order):
-        """
-        Handles bot response when an order has been accepted by the market.
-        """
+        """ Handles bot response when an order has been accepted by the market. """
 
         # Manage open order count based on private/public nature.
         if order.is_private:
@@ -140,9 +130,7 @@ class DSBot(Agent):
         self.inform(f"Order accepted {order.ref}")
 
     def order_rejected(self, info, order: Order):
-        """
-        Handles logic for rejected orders and resets state accordingly.
-        """
+        """ Handles logic for rejected orders and resets state accordingly. """
 
         # Conditions when order has been rejected.
         if self._bot_type == 0:
@@ -155,10 +143,8 @@ class DSBot(Agent):
         self.inform(f"Order rejected {order.ref}")
 
     def received_orders(self, orders: List[Order]):
-        """
-        Core logic for both proactive and reactive strategies.
-        Evaluates current orders and determines whether to place new orders or respond to opportunities.
-        """
+        """ Core logic for both proactive and reactive strategies.
+        Evaluates current orders and determines whether to place new orders or respond to opportunities. """
 
         # -- REACTIVE STRATEGY -- 
         if self._bot_type == 1:
@@ -321,26 +307,20 @@ class DSBot(Agent):
                 self.error(f"{e}")
 
     def _print_trade_opportunity(self, other_order):
-        """
-        Logs a potential trade opportunity based on detected market order.
-        """
+        """ Logs a potential trade opportunity based on detected market order. """
 
         # Display the trade opportunity to the console/logs.
         self.inform(f"I am a {self._role()} with profitable order {other_order}")
 
     def received_holdings(self, holdings: Holding):
-        """
-        Receives and logs the current holdings of the agent, including availiable and settled cash.
-        """
+        """ Receives and logs the current holdings of the agent, including availiable and settled cash. """
 
         # Log current financial standing.
         self.inform(f"Cash available is {holdings.cash_available}")
         self.inform(f"Cash settled is {holdings.cash}")
 
     def received_session_info(self, session: Session):
-        """
-        Responds to market session events (open or close).
-        """
+        """ Responds to market session events (open or close). """
 
         if session.is_open:
             # Notify that trading has started.
@@ -353,9 +333,7 @@ class DSBot(Agent):
             self.inform("Market is closed")
 
     def reason(self, orders):
-        """
-        Debug method to print the current list of orders.
-        """
+        """ Debug method to print the current list of orders. """
 
         try:
             # Display the orders to the console/logs.
@@ -365,10 +343,8 @@ class DSBot(Agent):
             self.error(f"{e}")
 
     def pre_start_tasks(self):
-        """
-        Prompts the user to configure the bot before runtime.
-        Sets the bot type (Proactive or Reactive) and the profit margin to use in trading logic.
-        """
+        """ Prompts the user to configure the bot before runtime.
+        Sets the bot type (Proactive or Reactive) and the profit margin to use in trading logic. """
 
         # Get bot type input from user.
         self._bot_type = int(input("Enter a Bot Type: \n"
@@ -380,13 +356,11 @@ class DSBot(Agent):
         PROFIT_MARGIN = int(input("Enter desired profit margin: \n"))
 
 if __name__ == "__main__":
-    """
-    Main entry point of the program.
+    """ Main entry point of the program.
     Instantiates and runs the trading bot with user-defined credentials and settings.
 
     SECURITY INFORMATION:
-    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables
-    """
+    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables. """
 
     FM_ACCOUNT = "regular-idol"
     FM_EMAIL = "FM_EMAIL"       # Replace with environment variable in real use.

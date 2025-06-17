@@ -13,15 +13,11 @@ from fmclient import Agent, Session, Holding, Order, OrderSide, OrderType
 
 
 class ProactiveBot(Agent):
-    """
-    A proactive trading bot that always places a SELL limit order at a fixed price when it has 
-    no existing pending orders.
-    """
+    """ A proactive trading bot that always places a SELL limit order at a fixed price when it has 
+    no existing pending orders. """
 
     def __init__(self, account: str, email: str, password: str, marketplace_id: int):
-        """
-        Initialise the Proactive Bot with trading credentials and a fixed sell price.
-        """
+        """ Initialise the Proactive Bot with trading credentials and a fixed sell price. """
 
         # Initalise instance of Proactive Bot.
         super().__init__(account, email, password, marketplace_id)
@@ -30,34 +26,26 @@ class ProactiveBot(Agent):
         self.waiting_for_server = False
 
     def initialised(self):
-        """
-        Called when the bot is connected to the marketplace.
-        """
+        """ Called when the bot is connected to the marketplace. """
         for market_id, market in self.markets.items():
             self.market = market
 
     def order_accepted(self, order: Order):
-        """"
-        Called when an order is accepted by the market.
-        Resets the wait flag so another order can be placed.
-        """"
+        """" Called when an order is accepted by the market.
+        Resets the wait flag so another order can be placed. """"
 
         self.waiting_for_server = False
 
     def order_rejected(self, info: dict, order: Order):
-        """
-        Called when an order is rejected by the market.
-        Resets the server wait flag so the bot can retry.
-        """
+        """ Called when an order is rejected by the market.
+        Resets the server wait flag so the bot can retry. """
 
         self.waiting_for_server = False
 
     def received_orders(self, orders: List[Order]):
-        """
-        Core trading logic.
+        """ Core trading logic.
         If there are no current pending orders owned by the bot,
-        place a new SELL limit order at the fixed price.
-        """
+        place a new SELL limit order at the fixed price. """
 
         # Current orders.
         my_orders = []
@@ -90,13 +78,12 @@ class ProactiveBot(Agent):
 
 
 if __name__ == "__main__":
-    """
-    SECURITY INFORMATION:
-    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables
-    """
+    """ SECURITY INFORMATION:
+    Avoid harcoding credentials - replace FM_EMAIL and FM_PASSWORD with environment variables. """
 
     FM_EMAIL = "FM_EMAIL" # Replace with environment variable in real use.
     FM_PASSWORD = "FM_PASSWORD" # Replace with environment variable in real use.
+    MARKETPLACE_ID = 1174 # Replace with environment variable in real use.
 
-    bot = ProactiveBot("regular-idol", FM_EMAIL, FM_PASSWORD, 1174)
+    bot = ProactiveBot("regular-idol", FM_EMAIL, FM_PASSWORD, MARKETPLACE_ID)
     bot.run()
