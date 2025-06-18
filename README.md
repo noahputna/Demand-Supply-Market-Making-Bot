@@ -16,3 +16,7 @@ This project showcases how agents can bridge different market layers (private an
 | Cancelation Handeling | Cancels stale or unmatched orders.                                    |
 
 ---
+
+## Strategy Explained
+### **Proactive Bot**
+-
