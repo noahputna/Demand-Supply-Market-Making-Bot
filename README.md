@@ -19,4 +19,5 @@ This project showcases how agents can bridge different market layers (private an
 
 ## Strategy Explained
 ### **Proactive Bot**
--
+- Actively places **limit orders** on the public market based on signals from a private agent (e.g., wants to buy/sell).
+- Ensures each order embeds a **minimum profit threshold** ('PROFIT_MARGIN') bettween buy and sell sides.
