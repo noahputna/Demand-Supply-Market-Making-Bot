@@ -63,6 +63,6 @@ You'll be prompted to choose:
 PROACTIVE = 0
 REACTIVE = 1
 ```
-Then, enter your desired profit masrgin (in cents):
+Then, enter your desired profit margin (in cents):
 ```text
 Enter desired profit margin:
