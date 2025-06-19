@@ -55,5 +55,11 @@ BOT_TYPE = 0                # Bot Type: 0 = PROACTIVE, 1 = REACTIVE
 
 ds_bot = DSBot(FM_ACCOUNT, FM_EMAIL, FM_PASSWORD, MARKETPLACE_ID, ROLE, BOT_TYPE)
 ds_bot.run()
-
+```
 ## Choose Bot Type
+You'll be prompted to choose:
+
+```ini
+PROACTIVE = 0
+REACTIVE = 1
+```
