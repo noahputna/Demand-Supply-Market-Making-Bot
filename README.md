@@ -80,4 +80,5 @@ Use ```os.getenv()``` in your Python code to fetch credentials securely:
 import os
 
 email = os.getenv("FM_EMAIL")
-password = os.get("FM_PASSWORD")
+password = os.getenv("FM_PASSWORD")
+
