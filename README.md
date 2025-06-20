@@ -26,7 +26,7 @@ This project showcases how agents can bridge different market layers (private an
 
 ---
 
-**Reactive Bot**
+### **Reactive Bot**
 - Monitros the **public market** for buy/sell orders.
 - Reacts only if there's an opportunity to **sell at a premium or buy at a discount** relative to a fixed internal value.
 - Once a trade is executed publicly, it **fulfills the matched order privately**, just like the proactive bot.
@@ -66,3 +66,4 @@ REACTIVE = 1
 Then, enter your desired profit margin (in cents):
 ```text
 Enter desired profit margin:
+```
