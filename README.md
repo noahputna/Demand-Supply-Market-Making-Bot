@@ -67,3 +67,12 @@ Then, enter your desired profit margin (in cents):
 ```text
 Enter desired profit margin:
 ```
+## Security Notes
+**Important:**
+Do **not** hardcode credentials. Use environment variables in production:
+
+```bash
+export FM_EMAIL="your-email"
+export FM_PASSWORD="your-password"
+```
+Use ```python os.getenv()``` in your Python code to fetch credentials securely:
