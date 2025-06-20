@@ -76,3 +76,8 @@ export FM_EMAIL="your-email"
 export FM_PASSWORD="your-password"
 ```
 Use ```os.getenv()``` in your Python code to fetch credentials securely:
+```python
+import os
+
+email = os.getenv("FM_EMAIL")
+password = os.get("FM_PASSWORD")
