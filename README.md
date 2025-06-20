@@ -75,4 +75,4 @@ Do **not** hardcode credentials. Use environment variables in production:
 export FM_EMAIL="your-email"
 export FM_PASSWORD="your-password"
 ```
-Use ```python os.getenv()``` in your Python code to fetch credentials securely:
+Use ```os.getenv()``` in your Python code to fetch credentials securely:
