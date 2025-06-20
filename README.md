@@ -88,4 +88,4 @@ password = os.getenv("FM_PASSWORD")
 | `DSBot.py`     | Core bot logic with both proactive and reactive modes. |
 | `proactive.py` | Simpler proactive-only trading agent.                  |
 | `reactive.py`  | Basic reactive-only trading agent.                     |
-| 'TestBot.py`   | Experimental version with additional instrumentation.  |
+| `TestBot.py`   | Experimental version with additional instrumentation.  |
